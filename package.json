@@ -1,0 +1,18 @@
+{
+  "name": "md-verwaltungsdaten-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node start.js"
+  },
+  "author": "Jens Winter",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.11",
+    "jsondiffpatch": "^0.4.1"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.31"
+  }
+}
