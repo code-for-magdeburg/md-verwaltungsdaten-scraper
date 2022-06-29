@@ -3,6 +3,9 @@ const fs = require('fs');
 const axios = require('axios').default;
 const cheerio = require('cheerio');
 const jsondiffpatch = require('jsondiffpatch');
+const { IncomingWebhook } = require('@slack/webhook');
+
+require('dotenv').config();
 
 
 const SOURCES = [
@@ -67,6 +70,8 @@ const SOURCES = [
         url: 'https://www.magdeburg.de/Start/B%C3%BCrger-Stadt/Verwaltung-Service/Offene-Verwaltungsdaten/index.php?NavID=37.906&object=tx|37.12820.1&La=1&'
     }
 ];
+
+const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
 
 
 function forceTargetDirectory(source) {
@@ -146,9 +151,20 @@ function saveLatestSnapshot(snapshot, source) {
 }
 
 
+async function sendDiffNotificationViaSlack(source) {
+    const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
+    return webhook.send({ text: `Updates found in "${source.title}"` });
+}
+
+
 (async () => {
 
-    for (const source of SOURCES) {
+    if (!SLACK_WEBHOOK_URL) {
+        console.error('Stopping process. Slack WebHook url is missing.');
+        process.exit(1);
+    }
+
+    for (const source of [SOURCES[0]]) {
 
         console.log(`Processing "${source.title}"`);
 
@@ -159,9 +175,12 @@ function saveLatestSnapshot(snapshot, source) {
         const latestSnapshot = await loadLatestSnapshot(source) || [];
         const diff = checkChanges(latestSnapshot, snapshot);
         if (diff) {
-            console.log("Found updates!");
+            console.log('Found updates!');
             saveDiff(latestSnapshot, snapshot, diff, source);
             saveLatestSnapshot(snapshot, source);
+            sendDiffNotificationViaSlack(source)
+                .then(console.log)
+                .catch(console.error)
         } else {
             console.log('No updates.');
         }
