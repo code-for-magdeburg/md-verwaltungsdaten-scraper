@@ -164,7 +164,7 @@ async function sendDiffNotificationViaSlack(source) {
         process.exit(1);
     }
 
-    for (const source of [SOURCES[0]]) {
+    for (const source of SOURCES) {
 
         console.log(`Processing "${source.title}"`);
 
