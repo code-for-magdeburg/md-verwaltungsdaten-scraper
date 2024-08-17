@@ -159,6 +159,15 @@ async function sendDiffNotificationViaSlack(source) {
 
 (async () => {
 
+/*
+    const filename = '/Users/jens/git/CodeForMD/md-verwaltungsdaten-scraper/generated/politik-wahlen/diff-2023-02-04T15:28:03.238Z.json';
+    const delta = JSON.parse(fs.readFileSync(filename, 'utf-8'));
+    const output = jsondiffpatch.formatters.console.format(delta.diff);
+    console.log(output);
+
+    return;
+*/
+
     if (!SLACK_WEBHOOK_URL) {
         console.error('Stopping process. Slack WebHook url is missing.');
         process.exit(1);

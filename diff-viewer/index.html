@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js"></script>
+    <link rel="stylesheet" href="./style.css" type="text/css" />
+    <link rel="stylesheet" href="./html.css" type="text/css" />
+    <link rel="stylesheet" href="./annotated.css" type="text/css" />
+</head>
+<body>
+<div id="visual"></div>
+<hr/>
+<div id="annotated"></div>
+<script>
+    //fetch('../generated/bevoelkerung-demokratie/diff-2023-04-11T20:00:02.489Z.json')
+    //fetch('../generated/bildung-kultur-sport/diff-2023-04-11T20:00:02.828Z.json')
+    //fetch('../generated/freizeit-tourismus/diff-2023-04-11T20:00:03.053Z.json')
+    //fetch('../generated/gesundheit-soziales/diff-2023-04-11T20:00:03.750Z.json')
+    //fetch('../generated/haushalt-steuern/diff-2023-04-05T20:00:04.774Z.json')
+    //fetch('../generated/infrastruktur-bauen-wohnen/diff-2023-04-11T20:00:04.126Z.json')
+    fetch('../generated/oeffentliche-verwaltung/diff-2023-06-14T20:00:04.342Z.json')
+    //fetch('../generated/politik-wahlen/diff-2023-02-01T20:00:05.010Z.json')
+    //fetch('../generated/transport-verkehr/diff-2023-05-15T20:00:05.853Z.json')
+    //fetch('../generated/umwelt-klima/diff-2023-05-16T20:00:06.215Z.json')
+    //fetch('../generated/wirtschaft-arbeit/diff-2023-04-28T20:00:05.843Z.json')
+        .then(response => response.json())
+        .then(jsonResponse => {
+            console.log(jsonResponse);
+            var left = jsonResponse.oldSnapshot;
+            var right = jsonResponse.newSnapshot;
+            var delta = jsondiffpatch.diff(left, right);
+
+            // beautiful html diff
+            document.getElementById('visual').innerHTML = jsondiffpatch.formatters.html.format(delta, left);
+
+            // self-explained json
+            document.getElementById('annotated').innerHTML = jsondiffpatch.formatters.annotated.format(delta, left);
+
+            jsondiffpatch.formatters.html.showUnchanged();
+        });
+</script>
+</body>
+</html>
